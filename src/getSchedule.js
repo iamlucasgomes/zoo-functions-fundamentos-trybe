@@ -39,14 +39,15 @@ const daysOfTheWeek = {
 };
 
 function getSchedule(scheduleTarget) {
-  if (!scheduleTarget) {
-    return daysOfTheWeek;
-  }
   if (Object.keys(daysOfTheWeek).includes(scheduleTarget)) {
     return { [scheduleTarget]: daysOfTheWeek[scheduleTarget] };
   }
-  return species.filter(({ name }) => name === scheduleTarget)
-    .find(({ availability }) => availability).availability;
+  if (!scheduleTarget || species.map(({ name }) => name).includes(scheduleTarget) === false) {
+    return daysOfTheWeek;
+  }
+  if (species.filter(({ name }) => name.includes(scheduleTarget))) {
+    return species.filter(({ name }) => name === scheduleTarget)
+      .find(({ availability }) => availability).availability;
+  }
 }
-console.log(getSchedule('lions'));
 module.exports = getSchedule;
