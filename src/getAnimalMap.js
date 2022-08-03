@@ -32,17 +32,31 @@ function animalsFilterSorted(direction) {
       return arr;
     }, []);
 }
+
 function sexAnimals(direction, options) {
   return species
     .filter(({ location }) => location.includes(direction))
     .reduce((arr, curVal) => {
       const obj = {};
-      const sexAnimal = curVal.residents.filter(({ sex }) => sex.includes(options.sex));
+      const sexAnimal = curVal.residents.filter(({ sex }) => sex === options.sex);
       obj[curVal.name] = sexAnimal.map(({ name }) => name);
       arr.push(obj);
       return arr;
     }, []);
 }
+
+function sexAnimalsSort(direction, options) {
+  return species
+    .filter(({ location }) => location.includes(direction))
+    .reduce((arr, curVal) => {
+      const obj = {};
+      const sexAnimal = curVal.residents.filter(({ sex }) => sex === options.sex);
+      obj[curVal.name] = sexAnimal.map(({ name }) => name).sort();
+      arr.push(obj);
+      return arr;
+    }, []);
+}
+
 const paramVoid = {
   NE: locations('NE'),
   NW: locations('NW'),
@@ -69,25 +83,36 @@ const sexList = (options) => {
     NE: sexAnimals('NE', options),
     NW: sexAnimals('NW', options),
     SE: sexAnimals('SE', options),
-    SW: sexAnimals('NW', options),
+    SW: sexAnimals('SW', options),
+  };
+  return sexies;
+};
+
+const sexListSort = (options) => {
+  const sexies = {
+    NE: sexAnimalsSort('NE', options),
+    NW: sexAnimalsSort('NW', options),
+    SE: sexAnimalsSort('SE', options),
+    SW: sexAnimalsSort('SW', options),
   };
   return sexies;
 };
 
 const sexVerify = (options) => {
-  if (options.sex) {
-    return sexList(options.sex);
+  if (!options.sorted && options.sex) {
+    return sexList(options);
   }
+  if (options.includeNames && !options.sex) {
+    return includeNames;
+  }
+  return sexListSort(options);
 };
 function getAnimalMap(options) {
   if (!options || !options.includeNames) {
     return paramVoid;
   }
-  if (options.sorted) {
+  if (options.sorted && !options.sex) {
     return sorted;
-  }
-  if (options.includeNames) {
-    return includeNames;
   }
   return sexVerify(options);
 }
