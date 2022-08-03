@@ -11,9 +11,9 @@ const locations = (direction) => {
   return local;
 };
 
-function animalsFilter(animal) {
+function animalsFilter(direction) {
   return species
-    .filter(({ location }) => location.includes(animal))
+    .filter(({ location }) => location.includes(direction))
     .reduce((arr, curVal) => {
       const obj = {};
       obj[curVal.name] = curVal.residents.map(({ name }) => name);
@@ -22,9 +22,9 @@ function animalsFilter(animal) {
     }, []);
 }
 
-function animalsFilterSorted(animal) {
+function animalsFilterSorted(direction) {
   return species
-    .filter(({ location }) => location.includes(animal))
+    .filter(({ location }) => location.includes(direction))
     .reduce((arr, curVal) => {
       const obj = {};
       obj[curVal.name] = curVal.residents.map(({ name }) => name).sort();
